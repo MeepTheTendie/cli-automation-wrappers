@@ -1,26 +1,44 @@
 # Complete Session Context & Learnings
 
-**Session Date**: 2026-01-17  
-**Duration**: Extended session covering automation, TanStack optimization, self-improvement  
-**User Projects**: iron-tracker, toku-tracker  
-**User Stack**: Node.js + npm + Vite + TypeScript + TanStack Router + Supabase/Convex
+**Session Date**: 2026-01-18  
+**Duration**: Call tracker app, learnings consolidation, repo simplification  
+**User Projects**: iron-tracker, toku-tracker, call-tracker  
+**User Stack**: Node.js + npm + Vite + TypeScript + TanStack Router + Supabase/Convex  
+**Learnings File**: /home/meep/MEGA_LEARNINGS.md
+
+---
+
+## ⚠️ SESSION STARTUP REMINDER
+
+**ALWAYS READ /home/meep/MEGA_LEARNINGS.md at session start!**
+
+This file contains all accumulated lessons learned across all projects. Check it for:
+- Previous mistakes and fixes
+- Best practices discovered
+- Project-specific context
+- Code review checklists
+- Quick reference commands
+
+Run this at session start:
+```bash
+head -100 /home/meep/MEGA_LEARNINGS.md
+```
 
 ---
 
 ## 🎯 **SESSION OBJECTIVES & OUTCOMES**
 
 ### **Primary Goals Achieved:**
-1. ✅ **Automate deployment monitoring** - Eliminated manual error log copy/pasting
-2. ✅ **Enhance TanStack setup** - Added Query for performance optimization
-3. ✅ **Implement world-class automation** - Auto-discovery for any project
-4. ✅ **Self-improvement cycle** - Identified and addressed personal weaknesses
-5. ✅ **Linux calculator help** - Solved user's personal gripe
+1. ✅ **Call tracker mini-app** - Simple HTML/JS timer for +1 calls
+2. ✅ **Repo simplification** - Deleted 22 files, 4600+ lines of boilerplate
+3. ✅ **Learnings consolidation** - Created MEGA_LEARNINGS.md
+4. ✅ **Windows optimization** - Added start.bat launcher, Win+Shift+C shortcut
 
 ### **Secondary Wins:**
-- Fixed toku-tracker missing deployment CI/CD
-- Added automated dependency updates
-- Implemented security scanning
-- Created intelligent project discovery
+- call-tracker reduced to 3 files (index.html, start.bat, LEARNINGS.md)
+- Pre-commit hook false positives documented
+- Framework vs vanilla JS tradeoffs captured
+- All LEARNINGS.md files now point to MEGA_LEARNINGS.md
 
 ---
 
@@ -30,6 +48,11 @@
 - `/home/meep/.config/opencode/deployment-manager.js` - Core deployment monitoring
 - `/home/meep/.config/opencode/master-automation.sh` - Master runner
 - `/home/meep/.config/opencode/tanstack-query-setup.js` - TanStack automation
+
+### **User Apps:**
+- `/home/meep/call-tracker/index.html` - Simple call timer (no build required)
+- `/home/meep/call-tracker/start.bat` - Windows launcher
+- `/home/meep/MEGA_LEARNINGS.md` - All lessons combined
 
 ### **Enhanced Framework (v2.0):**
 - `/home/meep/.config/opencode/improved-core.js` - Robust technical foundation
@@ -60,11 +83,13 @@
 - **Deployment**: Vercel
 
 ### **Workflow Preferences:**
-1. **Automate everything possible** - Wants manual work eliminated
-2. **Performance optimization** - Values speed improvements
-3. **TanStack ecosystem** - Committed to the stack
-4. **Incremental delivery** - Prefers tested, working solutions
-5. **World-class quality** - Expects professional-level results
+1. **Simplify first** - Start with vanilla HTML/JS, add frameworks only when needed
+2. **Automate everything possible** - Wants manual work eliminated
+3. **Performance optimization** - Values speed improvements
+4. **TanStack ecosystem** - Committed to the stack
+5. **Incremental delivery** - Prefers tested, working solutions
+6. **World-class quality** - Expects professional-level results
+7. **Lean repos** - Regularly audit and delete unused code
 
 ### **Communication Style:**
 - **Direct and concise** - No fluff, straight to solutions
@@ -77,11 +102,13 @@
 ## 💡 **KEY LEARNINGS ABOUT USER**
 
 ### **Pain Points Solved:**
-1. **Manual deployment monitoring** → Automated API integration
-2. **Copy/paste error logs** → Real-time status checking
-3. **Repetitive dependency updates** → Weekly automated PRs
-4. **Suboptimal TanStack usage** → Query integration for caching
-5. **Project discovery** → Auto-detection for any new project
+1. **JustCall lag** → Created standalone call tracker with timer
+2. **Manual deployment monitoring** → Automated API integration
+3. **Copy/paste error logs** → Real-time status checking
+4. **Repetitive dependency updates** → Weekly automated PRs
+5. **Suboptimal TanStack usage** → Query integration for caching
+6. **Project discovery** → Auto-detection for any new project
+7. **Over-engineered utilities** → Single HTML files instead of React/Vite
 
 ### **What User Values:**
 - **Zero manual work** when automation is possible
@@ -236,9 +263,15 @@
 # Essential commands for user
 cd /home/meep/.config/opencode
 ./master-automation.sh                    # Run all automation
-node deployment-manager.js monitor           # Check deployments
-node enhanced-automation.js                 # New improved system
-node tanstack-query-setup.js <project>       # Add TanStack Query
+node deployment-manager.js monitor        # Check deployments
+node enhanced-automation.js               # New improved system
+node tanstack-query-setup.js <project>    # Add TanStack Query
+
+# Learnings
+cat /home/meep/MEGA_LEARNINGS.md          # All lessons learned
+
+# Call Tracker
+open /home/meep/call-tracker/index.html   # Open call timer
 ```
 
 ### **Next Session Priorities:**
@@ -249,10 +282,11 @@ node tanstack-query-setup.js <project>       # Add TanStack Query
 
 ---
 
-**Session Complete**: 2026-01-17  
+**Session Complete**: 2026-01-18  
 **Status**: Production Ready  
-**User Feedback**: Positive engagement throughout  
+**User Feedback**: Positive - appreciated the simplification  
 **System Health**: Fully operational  
+**Learnings**: Updated in /home/meep/MEGA_LEARNINGS.md
 
 ---
 
