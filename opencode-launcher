@@ -6,8 +6,8 @@
 echo "🚀 OpenCode Launcher with Automation"
 echo "======================================"
 
-# Run your automation setup
-cd /home/meep/Documents/cli-automation-wrappers
+# Run your automation setup from the script directory
+cd "$(dirname "$0")"
 
 # Optional: Uncomment what you want to run automatically
 # ./master-automation.sh

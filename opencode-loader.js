@@ -35,21 +35,27 @@ class OpenCodeAutoLoader {
   }
 
   async loadSessionContext() {
-    const contextFile = path.join(this.contextPath, 'SESSION_CONTEXT_COMPLETE.md');
+    // Support both old and new locations
+    const contextPaths = [
+      path.join(this.contextPath, 'SESSION_CONTEXT_COMPLETE.md'),
+      path.join(process.env.HOME, 'cli-automation-wrappers', 'SESSION_CONTEXT_COMPLETE.md')
+    ];
     
-    try {
-      if (fs.existsSync(contextFile)) {
-        const content = fs.readFileSync(contextFile, 'utf8');
-        this.sessionContext = this.parseMarkdownContext(content);
-        console.log('📝 Loaded session context');
-      } else {
-        console.log('ℹ️  No previous session context found');
-        this.sessionContext = this.createNewUserSession();
+    for (const contextFile of contextPaths) {
+      try {
+        if (fs.existsSync(contextFile)) {
+          const content = fs.readFileSync(contextFile, 'utf8');
+          this.sessionContext = this.parseMarkdownContext(content);
+          console.log('📝 Loaded session context');
+          return;
+        }
+      } catch (error) {
+        // Continue to next path
       }
-    } catch (error) {
-      console.log('⚠️  Error loading context, using defaults');
-      this.sessionContext = this.createNewUserSession();
     }
+    
+    console.log('ℹ️  No previous session context found');
+    this.sessionContext = this.createNewUserSession();
   }
 
   async loadUserPreferences() {

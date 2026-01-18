@@ -17,8 +17,17 @@ class DeploymentManager {
 
   loadCredentials() {
     const credPath = path.join(process.env.HOME, '.config', 'opencode', 'credentials.json');
-    if (fs.existsSync(credPath)) {
-      return JSON.parse(fs.readFileSync(credPath, 'utf8'));
+    try {
+      if (fs.existsSync(credPath)) {
+        const content = fs.readFileSync(credPath, 'utf8');
+        const creds = JSON.parse(content);
+        // Only return if tokens are present (not just template)
+        if (creds.vercel_token && creds.vercel_token.length > 0) {
+          return creds;
+        }
+      }
+    } catch (error) {
+      console.log('⚠️  Error loading credentials:', error.message);
     }
     return {};
   }
