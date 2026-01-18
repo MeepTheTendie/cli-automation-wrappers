@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# OpenCode Quick Launcher - Simple version
+
+CONFIG_DIR="$HOME/.config/opencode"
+
+echo "🚀 OpenCode - Starting with context..."
+echo "====================================="
+
+# Change to config directory
+cd "$CONFIG_DIR" || exit 1
+
+# Check if session context exists and run appropriate startup
+if [[ -f "SESSION_CONTEXT_COMPLETE.md" ]]; then
+    echo "✅ Previous context found - Loading..."
+    echo ""
+    echo "📊 Quick Status:"
+    echo "   Projects: iron-tracker, toku-tracker"
+    echo "   Stack: Node.js + TanStack + Vite"
+    echo ""
+    echo "🎯 Ready Commands:"
+    echo "   ./master-automation.sh     # Full automation"
+    echo "   node deployment-manager.js monitor"
+    echo ""
+    
+    # Run the session loader (text version)
+    if [[ -f ".opencode-init" ]]; then
+        source .opencode-init
+    fi
+    
+else
+    echo "ℹ️  First-time setup detected"
+    echo "💡 Run automation once, then this will be available"
+fi
+
+echo ""
+echo "🎯 Working from: $(pwd)"
+echo "✅ OpenCode ready!"

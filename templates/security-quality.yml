@@ -1,0 +1,147 @@
+name: Security and Quality Checks
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run security scan daily at 6 AM UTC
+    - cron: '0 6 * * *'
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Run security audit
+        run: |
+          echo "🔒 Running security audit..."
+          npm audit --audit-level=moderate
+          
+      - name: Check for known vulnerabilities
+        run: |
+          echo "🔍 Checking for known vulnerabilities..."
+          npm audit --json > audit-report.json || true
+          
+      - name: Upload security report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-audit-report
+          path: audit-report.json
+          
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run comprehensive linting
+        run: |
+          echo "🧹 Running comprehensive linting..."
+          npm run lint
+          
+      - name: Check bundle size
+        run: |
+          echo "📦 Analyzing bundle size..."
+          npm run build
+          
+          # Get bundle size info
+          if [ -d "dist" ]; then
+            echo "Bundle size analysis:"
+            du -sh dist/*
+          fi
+          
+      - name: Type coverage check
+        run: |
+          echo "📊 Checking type coverage..."
+          npx type-coverage --details --strict || true
+          
+  performance-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build application
+        run: npm run build
+        
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          configPath: '.lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          
+  dependency-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Check for suspicious packages
+        run: |
+          echo "🕵️ Analyzing dependencies for suspicious packages..."
+          npx npm-audit-resolver --dry-run || true
+          
+      - name: Check license compliance
+        run: |
+          echo "📄 Checking license compliance..."
+          npx license-checker --summary --excludePrivatePackages || true
+          
+  notify-security-issues:
+    needs: [security-audit, dependency-safety]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Create security issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Security Vulnerability Detected',
+              body: `
+              ## 🚨 Security Vulnerability Detected
+              
+              A security vulnerability was detected in the recent build.
+              
+              **Build**: ${context.sha}
+              **Branch**: ${context.ref}
+              **Workflow**: ${context.workflow}
+              
+              Please review the security audit reports and address any vulnerabilities immediately.
+              
+              ### Next Steps:
+              1. Review the uploaded security audit artifacts
+              2. Update vulnerable dependencies
+              3. Test thoroughly after updates
+              4. Deploy the security fixes
+              
+              ---
+              *This issue was created automatically by the security workflow*
+              `,
+              labels: ['security', 'urgent', 'automated']
+            })

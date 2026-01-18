@@ -1,0 +1,135 @@
+# GitHub Actions CI/CD Best Practices
+
+Guide for setting up automated workflows with GitHub Actions to build, test, and deploy applications.
+
+## Core Concepts
+
+### Workflow Structure
+
+`.github/workflows/` directory contains YAML workflow files.
+
+```yaml
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run build
+```
+
+### Triggers
+
+```yaml
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # Manual trigger
+```
+
+## Caching
+
+### Node Modules Cache
+
+```yaml
+- name: Cache node modules
+  uses: actions/cache@v4
+  with:
+    path: node_modules
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      ${{ runner.os }}-node-
+```
+
+## Matrix Builds
+
+Run tests across multiple configurations:
+```yaml
+jobs:
+  test:
+    strategy:
+      matrix:
+        node-version: ['18', '20', '22']
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+```
+
+## Secrets Management
+
+```yaml
+steps:
+  - name: Deploy to Vercel
+    run: npx vercel --prod
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+```
+
+### Setting Secrets
+
+1. Repository Settings → Secrets and variables → Actions
+2. Add new repository secret
+3. Never commit secrets to code
+
+## Best Practices
+
+1. **Use Specific Action Versions** - `actions/checkout@v4` not `@v2`
+2. **Fail Fast with Concurrency**
+   ```yaml
+   concurrency:
+     group: ${{ github.workflow }}-${{ github.ref }}
+     cancel-in-progress: true
+   ```
+3. **Keep Workflows Fast** - Cache dependencies, parallelize jobs
+4. **Add Permissions** - Explicitly declare required permissions
+
+## Example: Node.js with Vercel Deploy
+
+```yaml
+name: Deploy to Vercel
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.ORG_ID }}
+          vercel-project-id: ${{ secrets.PROJECT_ID }}
+          vercel-args: '--prod'
+```
+
+## When to Apply
+
+- Setting up CI/CD pipelines
+- Automating tests and builds
+- Deploying on merge
+- Managing secrets

@@ -1,0 +1,135 @@
+# Linux Server Security Best Practices
+
+Guide for securing Linux servers in production environments. Applies to Ubuntu, Debian, RHEL.
+
+## Initial Setup
+
+### User Management
+
+**Create non-root user:**
+```bash
+adduser deploy
+usermod -aG sudo deploy
+```
+
+### SSH Hardening
+
+Edit `/etc/ssh/sshd_config`:
+```ssh
+Port 2222                          # Non-standard port
+PermitRootLogin no                 # Disable root login
+PasswordAuthentication no          # Key-only auth
+MaxAuthTries 3
+AllowUsers deploy
+```
+
+**Restart SSH:**
+```bash
+systemctl restart sshd
+```
+
+## Firewall Configuration
+
+### UFW (Uncomplicated Firewall)
+
+```bash
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow 2222/tcp    # SSH
+ufw allow 80/tcp      # HTTP
+ufw allow 443/tcp     # HTTPS
+ufw enable
+```
+
+## System Updates
+
+### Automatic Updates
+
+```bash
+apt install unattended-upgrades
+dpkg-reconfigure -plow unattended-upgrades
+```
+
+### Manual Updates
+
+```bash
+apt update && apt upgrade -y
+```
+
+## Process Isolation
+
+### Fail2ban (Brute Force Protection)
+
+```bash
+apt install fail2ban
+
+# Edit /etc/fail2ban/jail.local
+[sshd]
+enabled = true
+port = 2222
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+bantime = 3600
+
+systemctl enable fail2ban
+systemctl start fail2ban
+```
+
+## Monitoring
+
+### Log Locations
+
+- `/var/log/auth.log` - Authentication attempts
+- `/var/log/syslog` - System messages
+- `/var/log/nginx/access.log` - Web server requests
+
+### View Failed SSH Attempts
+
+```bash
+grep "Failed password" /var/log/auth.log
+```
+
+## Web Server Security (Nginx)
+
+### Basic Hardening
+
+```nginx
+server {
+    server_tokens off;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=31536000" always;
+}
+```
+
+### SSL/TLS Configuration
+
+```nginx
+server {
+    listen 443 ssl http2;
+    ssl_certificate /etc/letsencrypt/live/domain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/domain.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+}
+```
+
+## Quick Security Checklist
+
+1. [ ] Use SSH key authentication only
+2. [ ] Change default SSH port
+3. [ ] Disable root login
+4. [ ] Configure firewall (UFW)
+5. [ ] Enable automatic security updates
+6. [ ] Install fail2ban
+7. [ ] Set up SSL/TLS
+8. [ ] Configure log monitoring
+
+## When to Apply
+
+- Initial server setup
+- Hardening production servers
+- Configuring firewalls
+- Setting up SSH security
+- Web server hardening
+- Security audits

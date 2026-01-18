@@ -1,0 +1,11 @@
+{
+  "workingDir": "/home/meep",
+  "logLevel": "info",
+  "autoFix": true,
+  "testBeforeDeploy": true,
+  "skipProjects": [
+    ".opencode",
+    "nerd-fonts",
+    "node_modules"
+  ]
+}

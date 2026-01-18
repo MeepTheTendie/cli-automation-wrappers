@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# OpenCode Auto-Loader Shell Script
+# This runs every time you start a new OpenCode session
+
+echo "🚀 OpenCode - Auto-Loading Context..."
+echo "========================================="
+
+CONFIG_DIR="$HOME/.config/opencode"
+
+# Check for context files
+if [[ -f "$CONFIG_DIR/SESSION_CONTEXT_COMPLETE.md" ]]; then
+    echo "✅ Previous session context found"
+    
+    # Show quick summary
+    echo ""
+    echo "📊 QUICK SUMMARY:"
+    echo "Last Session: $(grep 'Session Date:' "$CONFIG_DIR/SESSION_CONTEXT_COMPLETE.md" | head -1 | cut -d':' -f2- | tr -d ' *')"
+    echo "Projects: iron-tracker, toku-tracker"
+    echo "Stack: Node.js + npm + Vite + TanStack"
+    echo ""
+    
+    echo "🎯 READY ACTIONS:"
+    echo "./master-automation.sh          # Run full automation"
+    echo "node deployment-manager.js monitor  # Check deployments"
+    echo "node enhanced-automation.js        # Use improved system"
+    echo ""
+    
+    # Load context into environment for this session
+    export OPENCODE_CONTEXT_LOADED=true
+    export OPENCODE_CONFIG_DIR="$CONFIG_DIR"
+    
+else
+    echo "ℹ️  No previous context found - first session or reset"
+    echo "Configuration directory: $CONFIG_DIR"
+fi
+
+echo "💾 Session context loaded and ready!"
+echo "Type 'help' for available commands or start working immediately!"

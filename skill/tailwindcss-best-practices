@@ -1,0 +1,128 @@
+# Tailwind CSS Best Practices
+
+Comprehensive guide for building scalable, responsive designs with Tailwind CSS v4. Reference when styling components, creating layouts, or customizing the theme.
+
+## Core Principles
+
+### Mobile-First Responsive Design
+
+Always start with base styles for mobile, then add responsive prefixes for larger screens. Never define only `md:` or `lg:` classes without base styles.
+
+**Correct:**
+```tsx
+<div className="flex flex-col md:flex-row md:justify-center">
+  <p>Works on all screen sizes</p>
+</div>
+```
+
+**Incorrect:**
+```tsx
+<div className="md:flex md:justify-center">
+  <p>Broken on mobile!</p>
+</div>
+```
+
+### Utility-First Workflow
+
+Apply utility classes directly in JSX for rapid development. Avoid creating custom CSS classes unless absolutely necessary.
+
+**Prefer:**
+```tsx
+<button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+  Click me
+</button>
+```
+
+### Design Tokens with @theme
+
+Use Tailwind v4's `@theme` directive to define custom design tokens in your CSS.
+
+```css
+@theme {
+  --font-display: "Satoshi", "sans-serif";
+  --breakpoint-3xl: 120rem;
+  --color-avocado-100: oklch(0.9 0.1 120);
+}
+```
+
+### Color System
+
+Tailwind provides a default color palette. Use semantic names for consistency:
+
+- Backgrounds: `bg-white`, `bg-gray-50`, `bg-gray-900`
+- Text: `text-gray-500`, `text-gray-900`
+- Borders: `border-gray-200`, `border-gray-700`
+- Accents: `text-emerald-500`, `bg-blue-600`
+
+### Spacing Scale
+
+Use the default spacing scale consistently:
+- `p-4`, `m-4` = 1rem (16px)
+- `gap-4` = 1rem between flex/grid items
+- `space-y-4` = margin between stacked elements
+
+### Component Patterns
+
+**Cards:**
+```tsx
+<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+  Content
+</div>
+```
+
+**Buttons:**
+```tsx
+<button className="px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg 
+                   hover:bg-emerald-700 active:scale-[0.98] transition-all">
+  Label
+</button>
+```
+
+**Inputs:**
+```tsx
+<input className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg 
+                  focus:ring-2 focus:ring-emerald-500 outline-none" />
+```
+
+### Dark Mode
+
+Use `dark:` prefix for dark mode variants:
+```tsx
+<div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+  Content
+</div>
+```
+
+### Container Constraints
+
+Constrain content width on desktop to prevent spanning full width:
+```tsx
+<div className="w-full max-w-md mx-auto">
+  {/* Content centered with max width */}
+</div>
+```
+
+### Breakpoints (Default)
+
+- Default (base): mobile
+- `sm`: 640px
+- `md`: 768px
+- `lg`: 1024px
+- `xl`: 1280px
+- `2xl`: 1536px
+
+### Common Mistakes to Avoid
+
+1. **Class soup** - Extract repeated class combinations into components
+2. **Arbitrary values overuse** - Prefer default scale over `h-[123px]`
+3. **Magic numbers** - Avoid `top-[3.14159rem]`, use config theme
+4. **Missing focus states** - Always include `focus:ring` for interactive elements
+5. **Not using `mx-auto`** - Containers need centering on desktop
+
+## When to Apply
+
+- Creating new components
+- Styling forms, cards, buttons
+- Building responsive layouts
+- Implementing dark mode
+- Customizing theme colors/spacing

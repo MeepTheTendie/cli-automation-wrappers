@@ -1,0 +1,117 @@
+# Vercel Deployment Best Practices
+
+Guide for deploying React applications to Vercel with optimal performance, environment configuration, and CI/CD integration.
+
+## Quick Deploy
+
+### Automatic Git Integration
+
+1. Connect GitHub/GitLab/Bitbucket repository
+2. Vercel auto-detects framework (Vite, Next.js, etc.)
+3. Deploys on every push to main branch
+
+## Environment Variables
+
+### Required for Supabase
+
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### Adding Variables
+
+1. Go to Project Settings → Environment Variables
+2. Add key-value pairs
+3. Select appropriate environment (Production, Preview, Development)
+4. Redeploy to apply
+
+## Build Configuration
+
+### Vite Configuration
+
+`vercel.json`:
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite"
+}
+```
+
+### SPA Fallback
+
+For React Router / TanStack Router:
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+## Performance Optimization
+
+### Edge Network
+
+Vercel automatically deploys to edge nodes worldwide. No configuration needed.
+
+### Bundle Optimization
+
+- Use dynamic imports for heavy components
+- Split vendor chunks
+- Enable gzip/brotli (automatic on Vercel)
+
+```typescript
+const HeavyChart = lazy(() => import('./components/Chart'))
+```
+
+## Custom Domains
+
+### Adding Domain
+
+1. Project Settings → Domains
+2. Add custom domain (e.g., myworkouttracker.xyz)
+3. Configure DNS records:
+   - Apex: A record to 76.76.21.21
+   - Subdomain: CNAME to cname.vercel-dns.com
+
+### SSL
+
+Automatic free SSL via Let's Encrypt. No action required.
+
+## Troubleshooting
+
+### Build Fails
+
+1. Check build logs in Vercel dashboard
+2. Verify Node.js version compatibility
+3. Check for missing dependencies
+
+### 404 on Refresh
+
+Add rewrite rule for SPA routing:
+```json
+{
+  "rewrites": [{ "source": "/:path*", "destination": "/index.html" }]
+}
+```
+
+### Caching Issues
+
+Hard refresh: `Ctrl+Shift+R` or `Cmd+Shift+R`
+Clear Vercel cache: Redeploy with `--force` flag
+
+## Best Practices
+
+1. **Use Preview Deployments** - Test PRs before merging
+2. **Environment Variables** - Never commit secrets to git
+3. **Atomic Deployments** - No downtime during deploy
+4. **Rollback** - Instant revert via Vercel dashboard if issues arise
+
+## When to Apply
+
+- Deploying React/Vite apps
+- Configuring environment variables
+- Setting up custom domains
+- Troubleshooting deployment issues

@@ -1,0 +1,72 @@
+# AI Agent Context Management Framework
+
+How to organize information for optimal agent performance:
+
+## Hierarchy
+
+### 1. O(context size/k) → System/Context (tiny, high-value)
+   - Max 1-2 pages
+   - Current task instructions
+   - Immediate file paths
+   - User preferences and constraints
+   - What the user is working on RIGHT NOW
+
+**Examples:**
+- CONTEXT.md files per project
+- Active task instructions
+- User preferences (mobile-first, dark mode, etc.)
+
+### 2. O(context size*k*x) → Files in directories
+   - Skills (`~/.config/opencode/skill/`)
+   - Source code organized by feature
+   - Documentation
+   - Anything that needs to be read but doesn't fit in context
+
+**Examples:**
+- Framework docs
+- Component implementations
+- Database schemas
+
+### 3. Structured data → Databases
+   - Supabase for queryable data
+   - Any data requiring complex queries
+   - User data, application state
+
+**Examples:**
+- Workout logs
+- Habit tracking records
+- User preferences in DB
+
+### 4. Everything else behind search
+   - Grep, glob, web search, codesearch
+   - Library docs
+   - Stack Overflow solutions
+   - New topics
+
+**Examples:**
+- "How do I configure Vercel?"
+- "Tailwind dark mode syntax"
+- "Supabase real-time subscription patterns"
+
+## Principles
+
+1. **Don't memorize** - Fetch on demand
+2. **Keep context tiny** - Only what's needed NOW
+3. **Organize by access pattern** - How often/likely needed
+4. **Structured data goes in DB** - Queryable, shareable
+5. **Skills are files** - Load when needed, not all at once
+
+## Anti-Patterns
+
+- ❌ Putting everything in context
+- ❌ Memorizing library APIs
+- ❌ Storing user data in files
+- ❌ Not using search when uncertain
+
+## Correct Patterns
+
+- ✅ Tiny context file per project
+- ✅ Skills loaded on demand
+- ✅ Web search for new topics
+- ✅ Database for structured data
+- ✅ Search tools for code exploration

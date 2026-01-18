@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# OpenCode Universal Launcher - Place this in your PATH
+
+CONFIG_DIR="$HOME/.config/opencode"
+
+echo "🚀 OpenCode - Initializing..."
+echo "================================"
+
+# Change to config directory automatically
+cd "$CONFIG_DIR" || {
+    echo "❌ OpenCode config directory not found at $CONFIG_DIR"
+    echo "💡 Creating it now..."
+    mkdir -p "$CONFIG_DIR"
+    cd "$CONFIG_DIR"
+}
+
+# Check if opencode-session exists and run it
+if [[ -f "opencode-session" ]]; then
+    echo "🎯 Starting OpenCode with full context..."
+    exec ./opencode-session
+else
+    echo "⚠️  Setting up OpenCode for first time..."
+    
+    # Create basic setup if missing
+    if [[ ! -f "SESSION_CONTEXT_COMPLETE.md" ]]; then
+        echo "📝 No previous context found - First session setup"
+        echo "💡 Run this again after your first automation session"
+        exit 1
+    fi
+    
+    # Fallback to basic startup
+    if [[ -f "startup.js" ]]; then
+        node startup.js
+    else
+        echo "ℹ️  Basic mode - No automation setup yet"
+        echo "📁 Configuration directory: $CONFIG_DIR"
+        echo "🔧 Available commands will be shown here"
+    fi
+fi

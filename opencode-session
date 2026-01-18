@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# OpenCode Session Launcher
+# Use this to start OpenCode with full context
+
+echo "🚀 Starting OpenCode with Context Loader..."
+echo "============================================"
+
+# Set environment variable
+export OPENCODE_SESSION=true
+export OPENCODE_CONFIG_DIR="$HOME/.config/opencode"
+
+# Change to config directory
+cd "$OPENCODE_CONFIG_DIR"
+
+# Run the startup script
+if [[ -f "startup.js" ]]; then
+    node startup.js
+else
+    echo "⚠️  Startup script not found. Loading context manually..."
+    if [[ -f ".opencode-init" ]]; then
+        source ".opencode-init"
+    else
+        echo "ℹ️  No context files available"
+    fi
+fi
+
+echo ""
+echo "✅ OpenCode session ready!"
+echo "💡 Type 'help' for available commands"
+echo "📁 Working from: $(pwd)"

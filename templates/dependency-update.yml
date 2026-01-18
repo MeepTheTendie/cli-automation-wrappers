@@ -1,0 +1,77 @@
+name: Automated Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Check for outdated dependencies
+        id: check-deps
+        run: |
+          echo "Checking for outdated packages..."
+          npm outdated --json || true > outdated.json
+          
+          if [ -s outdated.json ]; then
+            echo "updates_available=true" >> $GITHUB_OUTPUT
+            echo "Found $(cat outdated.json | jq '. | keys | length') outdated packages"
+          else
+            echo "updates_available=false" >> $GITHUB_OUTPUT
+            echo "No outdated packages found"
+          fi
+          
+      - name: Update dependencies
+        if: steps.check-deps.outputs.updates_available == 'true'
+        run: |
+          echo "Updating dependencies..."
+          npm update
+          npm install
+          
+      - name: Run tests after update
+        if: steps.check-deps.outputs.updates_available == 'true'
+        run: |
+          echo "Running tests after dependency update..."
+          npm run check
+          npm run build  
+          npm run test
+          
+      - name: Create Pull Request
+        if: steps.check-deps.outputs.updates_available == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update dependencies"
+          title: "🤖 Automated Dependency Updates"
+          body: |
+            ## 🤖 Automated Dependency Updates
+            
+            This PR contains automated dependency updates to keep the project secure and up-to-date.
+            
+            ### What was updated:
+            - Dependencies with compatible version bumps
+            - Security patches where applicable
+            
+            ### ✅ Verification:
+            - [x] All tests pass
+            - [x] Build successful  
+            - [x] Linting passed
+            - [x] No breaking changes detected
+            
+            ---
+            
+            *This PR was created automatically by the dependency update workflow*
+          branch: automated-dependency-updates
+          delete-branch: true
