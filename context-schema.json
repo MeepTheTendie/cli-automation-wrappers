@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenCode Context Metadata",
+  "description": "Schema for OpenCode context metadata with validation",
+  "type": "object",
+  "required": ["version", "lastUpdated", "essential"],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100,
+      "description": "Schema version for future compatibility"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO timestamp of last update"
+    },
+    "essential": {
+      "type": "object",
+      "required": ["lastSession", "stack", "projects"],
+      "properties": {
+        "lastSession": {
+          "type": "string",
+          "description": "Date of last session"
+        },
+        "stack": {
+          "type": "string",
+          "description": "User tech stack description"
+        },
+        "projects": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of user projects"
+        },
+        "sessionCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of sessions completed"
+        }
+      },
+      "additionalProperties": true
+    },
+    "sessionHistory": {
+      "type": "array",
+      "description": "Recent session history"
+    },
+    "userPreferences": {
+      "type": "object",
+      "description": "User preferences and settings"
+    }
+  },
+  "additionalProperties": true
+}
