@@ -22,7 +22,7 @@ export interface PluginContext {
 
 export abstract class Plugin extends EventEmitter {
   protected config: PluginConfig;
-  protected context: PluginContext;
+  protected context!: PluginContext;
 
   constructor(config: PluginConfig) {
     super();
@@ -50,11 +50,11 @@ export abstract class Plugin extends EventEmitter {
 
 export interface PluginMetadata {
   plugin: typeof Plugin;
-  instance?: Plugin;
+  instance?: Plugin | undefined;
   config: PluginConfig;
   loaded: boolean;
   enabled: boolean;
-  lastError?: Error;
+  lastError?: Error | undefined;
 }
 
 export class PluginManager extends EventEmitter {
@@ -125,7 +125,7 @@ export class PluginManager extends EventEmitter {
 
     try {
       // Create plugin instance
-      const instance = new metadata.plugin(metadata.config);
+      const instance = new (metadata.plugin as unknown as new (config: PluginConfig) => Plugin)(metadata.config);
 
       // Create plugin context
       const context: PluginContext = {

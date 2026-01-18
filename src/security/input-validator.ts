@@ -195,7 +195,7 @@ export class InputValidator {
     return {
       isValid: errors.length === 0,
       errors,
-      sanitized: sanitized
+      sanitized
     };
   }
 

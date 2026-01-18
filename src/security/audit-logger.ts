@@ -13,9 +13,9 @@ export interface AuditEvent {
 }
 
 export class AuditLogger {
-  private logger: winston.Logger;
+  private logger!: winston.Logger;
   private static instance: AuditLogger;
-  private logFilePath: string;
+  private logFilePath!: string;
 
   constructor() {
     this.initializeLogger();
@@ -77,7 +77,7 @@ export class AuditLogger {
       }
 
       // Sanitize message
-      if (sanitizedInfo.message) {
+      if (sanitizedInfo.message && typeof sanitizedInfo.message === 'string') {
         sanitizedInfo.message = this.sanitizeString(sanitizedInfo.message);
       }
 
@@ -146,7 +146,7 @@ export class AuditLogger {
       timestamp: new Date(),
       event: success ? 'credential_accessed' : 'credential_access_failed',
       service,
-      metadata,
+      metadata: metadata || {},
       severity: success ? 'info' : 'warn'
     });
   }
@@ -156,7 +156,7 @@ export class AuditLogger {
       timestamp: new Date(),
       event: 'credential_stored',
       service,
-      metadata,
+      metadata: metadata ?? {},
       severity: 'info'
     });
   }
@@ -166,7 +166,7 @@ export class AuditLogger {
       timestamp: new Date(),
       event: 'credential_deleted',
       service,
-      metadata,
+      metadata: metadata ?? {},
       severity: 'info'
     });
   }
@@ -175,7 +175,7 @@ export class AuditLogger {
     await this.logEvent({
       timestamp: new Date(),
       event: `security_violation_${event}`,
-      metadata,
+      metadata: metadata ?? {},
       severity: 'critical'
     });
   }
@@ -193,7 +193,7 @@ export class AuditLogger {
     await this.logEvent({
       timestamp: new Date(),
       event: `system_${operation}`,
-      metadata,
+      metadata: metadata ?? {},
       severity: 'info'
     });
   }

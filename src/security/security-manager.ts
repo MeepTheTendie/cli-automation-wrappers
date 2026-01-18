@@ -124,17 +124,21 @@ export class SecurityManager {
 
   private encrypt(text: string): string {
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipher('aes-256-cbc', this.encryptionKey);
+    const cipher = crypto.createCipheriv('aes-256-cbc', this.encryptionKey, iv);
     let encrypted = cipher.update(text, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    return iv.toString('hex') + ':' + encrypted;
+    return `${iv.toString('hex')  }:${  encrypted}`;
   }
 
   private decrypt(encryptedText: string): string {
     const parts = encryptedText.split(':');
-    const iv = Buffer.from(parts[0], 'hex');
-    const encrypted = parts[1];
-    const decipher = crypto.createDecipher('aes-256-cbc', this.encryptionKey);
+    if (parts.length < 2) {
+      throw new Error('Invalid encrypted text format');
+    }
+    const iv = Buffer.from(parts[0]!, 'hex');
+    const encrypted = parts[1]!;
+    const key = this.encryptionKey;
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
     let decrypted = decipher.update(encrypted, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return decrypted;

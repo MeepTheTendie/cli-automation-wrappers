@@ -23,7 +23,7 @@ program
   .command('init')
   .description('Initialize SCA with interactive setup')
   .option('--force', 'Force reinitialization')
-  .action(async (options) => {
+  .action(async (options: { force?: boolean }) => {
     const spinner = ora('Initializing SCA...').start();
     
     try {
@@ -52,7 +52,7 @@ program
   .command('setup')
   .description('Run interactive setup wizard')
   .option('--skip-credentials', 'Skip credential setup')
-  .action(async (options) => {
+  .action(async (options: { skipCredentials?: boolean }) => {
     try {
       const wizard = new SetupWizard();
       await wizard.run(options.skipCredentials);
@@ -73,7 +73,7 @@ pluginCmd
   .description('List all available plugins')
   .option('--enabled', 'Show only enabled plugins')
   .option('--loaded', 'Show only loaded plugins')
-  .action(async (options) => {
+  .action((options: { enabled?: boolean; loaded?: boolean }) => {
     try {
       const plugins = options.loaded 
         ? pluginManager.listLoadedPlugins()
@@ -113,7 +113,7 @@ pluginCmd
 pluginCmd
   .command('enable <name>')
   .description('Enable a plugin')
-  .action(async (name) => {
+  .action(async (name: string) => {
     try {
       await pluginManager.enablePlugin(name);
       console.log(chalk.green(`✓ Plugin "${name}" enabled`));
@@ -126,7 +126,7 @@ pluginCmd
 pluginCmd
   .command('disable <name>')
   .description('Disable a plugin')
-  .action(async (name) => {
+  .action(async (name: string) => {
     try {
       await pluginManager.disablePlugin(name);
       console.log(chalk.yellow(`✓ Plugin "${name}" disabled`));
@@ -139,7 +139,7 @@ pluginCmd
 pluginCmd
   .command('load <name>')
   .description('Load a plugin')
-  .action(async (name) => {
+  .action(async (name: string) => {
     const spinner = ora(`Loading plugin "${name}"...`).start();
     
     try {

@@ -23,7 +23,12 @@
     "check-all-deployments": "node deployment-manager.js check",
     "test-all-projects": "for project in /home/meep/iron-tracker /home/meep/toku-tracker; do echo \"Testing $(basename $project)...\" && node deployment-manager.js test $(basename $project); done"
   },
-  "keywords": ["cli", "automation", "security", "framework"],
+  "keywords": [
+    "cli",
+    "automation",
+    "security",
+    "framework"
+  ],
   "author": "Secure CLI Automation Team",
   "license": "MIT",
   "dependencies": {
@@ -41,18 +46,19 @@
     "zod": "^3.22.0"
   },
   "devDependencies": {
-    "@types/node": "^20.5.0",
+    "@types/inquirer": "^9.0.9",
     "@types/jest": "^29.5.0",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.4.0",
+    "@types/node": "^20.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.47.0",
     "jest": "^29.6.0",
+    "rimraf": "^5.0.0",
+    "snyk": "^1.1200.0",
+    "supertest": "^6.3.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.0",
-    "typescript": "^5.1.0",
-    "rimraf": "^5.0.0",
-    "supertest": "^6.3.0",
-    "snyk": "^1.1200.0"
+    "typescript": "^5.1.0"
   },
   "engines": {
     "node": ">=18.0.0"

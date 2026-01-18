@@ -105,7 +105,7 @@ export class SetupWizard {
         name: 'workingDir',
         message: 'Enter working directory:',
         default: currentDir,
-        validate: async (input) => {
+        validate: async (input: string) => {
           const validation = inputValidator.validateFilePath(input);
           if (!validation.isValid) {
             return validation.errors.join(', ');
@@ -113,7 +113,7 @@ export class SetupWizard {
           
           // Check if directory exists
           try {
-            require('fs').accessSync(validation.sanitized!);
+            require('fs').accessSync(validation.sanitized);
             return true;
           } catch {
             return 'Directory does not exist or is not accessible';
@@ -129,7 +129,7 @@ export class SetupWizard {
   private async setupSecurity(): Promise<void> {
     console.log(chalk.blue('🔐 Security Configuration\n'));
     
-    const currentSecurity = configManager.get('security', {});
+    const currentSecurity = configManager.get<Record<string, any>>('security', {});
     
     const answers = await inquirer.prompt([
       {
@@ -149,7 +149,7 @@ export class SetupWizard {
         name: 'logRetentionDays',
         message: 'Log retention days (1-365):',
         default: currentSecurity.logRetentionDays || 30,
-        validate: (input) => {
+        validate: (input: string) => {
           const num = parseInt(input);
           return (num >= 1 && num <= 365) || 'Please enter a number between 1 and 365';
         }
@@ -251,10 +251,10 @@ export class SetupWizard {
     ]);
 
     // Update plugin configuration
-    const currentPlugins = configManager.get('plugins', []);
+    const currentPlugins: Array<{ name: string; enabled: boolean; config: Record<string, unknown> }> = configManager.get('plugins', []);
     
     for (const plugin of availablePlugins) {
-      const pluginConfig = currentPlugins.find((p: any) => p.name === plugin.name) || {
+      const pluginConfig = currentPlugins.find((p) => p.name === plugin.name) || {
         name: plugin.name,
         enabled: false,
         config: {}
@@ -262,7 +262,7 @@ export class SetupWizard {
       
       pluginConfig.enabled = selectedPlugins.includes(plugin.name);
       
-      if (!currentPlugins.find((p: any) => p.name === plugin.name)) {
+      if (!currentPlugins.find((p) => p.name === plugin.name)) {
         currentPlugins.push(pluginConfig);
       }
     }

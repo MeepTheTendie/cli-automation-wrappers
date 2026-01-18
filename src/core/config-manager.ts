@@ -263,7 +263,7 @@ export class ConfigManager {
 
     // Check if directory exists and is accessible
     try {
-      const stats = fs.statSync(validation.sanitized!);
+      const stats = fs.statSync(validation.sanitized);
       return stats.isDirectory();
     } catch {
       return false;

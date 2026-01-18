@@ -1,5 +1,4 @@
 import { auditLogger } from '../security/audit-logger';
-import { configManager } from './config-manager';
 import { securityManager } from '../security/security-manager';
 
 export interface ErrorContext {
@@ -271,11 +270,13 @@ export class ErrorHandler {
   private async recoverPermissions(): Promise<void> {
     // Could attempt to elevate permissions or fix ownership
     console.log('Attempting to resolve permission issues...');
+    return Promise.resolve();
   }
 
   private async recoverDiskSpace(): Promise<void> {
     // Could attempt to clear temporary files
     console.log('Attempting to free disk space...');
+    return Promise.resolve();
   }
 
   private async genericRecovery(): Promise<void> {
@@ -304,7 +305,8 @@ export class ErrorHandler {
     const recentErrors: Array<{ key: string; count: number; lastSeen: Date }> = [];
 
     for (const [key, count] of this.errorCounts.entries()) {
-      const operation = key.split(':')[0];
+      const keyParts = key.split(':');
+      const operation = keyParts[0] || 'unknown';
       errorsByOperation[operation] = (errorsByOperation[operation] || 0) + count;
       
       const lastSeen = this.lastErrors.get(key)!;
