@@ -145,3 +145,4 @@ docs/_build/
 # SCA specific
 .opencode/
 .sca-cache/
+.vercel
