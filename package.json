@@ -13,7 +13,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint src/**/*.ts",
-    "security:audit": "npm audit",
+    "security:audit": "bun audit",
     "security:scan": "snyk test",
     "setup": "node scripts/setup.js",
     "clean": "rimraf dist",
@@ -62,5 +62,6 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "packageManager": "bun@1.1.33"
 }
