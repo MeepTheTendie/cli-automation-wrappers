@@ -1,5 +1,7 @@
 {
   "version": 2,
   "name": "cli-automation-wrappers",
+  "buildCommand": "bun run build",
+  "installCommand": "bun install",
   "outputDirectory": "dist"
 }
